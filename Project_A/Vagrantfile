@@ -14,28 +14,29 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   # config.vm.box = "base"
 
-  # Define the master machine
-  #config.vm.define "master" do |master|
+  # Define the slave machine
 
-  #master.vm.box = "ubuntu/focal64"
-  #master.vm.hostname = "master"
-  #master.vm.network "private_network", ip:"192.168.56.105"
+  config.vm.define "slave" do |slave|
+
+  slave.vm.box = "ubuntu/focal64"
+  slave.vm.hostname = "slave"
+  slave.vm.network "private_network", ip:192.168.56.104
   #RUN THE SHELL SCRIPT to set up the LAMP stack
-  #master.vm.provision "shell", path: "lamp.sh"
+  slave.vm.provision "shell", path: "lamp.sh"
+
+  end
   
-  # end
+  # Define the master machine
+  config.vm.define "master" do |master|
 
-  # define a 2nd machine named slave
-
-  # config.vm.define "slave" do |slave|
-
-  # slave.vm.box = "ubuntu/focal64"
-  # slave.vm.hostname = "slave"
-  # slave.vm.network "private_network", ip:192.168.56.104
+  master.vm.box = "ubuntu/focal64"
+  master.vm.hostname = "master"
+  master.vm.network "private_network", ip:"192.168.56.105"
   #RUN THE SHELL SCRIPT to set up the LAMP stack
-  # slave.vm.provision "shell", path: "lamp.sh"
+  master.vm.provision "shell", path: "lamp.sh"
+  
+  end
 
-  # end
   
 end
 
