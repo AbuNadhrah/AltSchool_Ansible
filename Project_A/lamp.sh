@@ -25,6 +25,9 @@ if [ "$(hostname)" = "master" ]; then
     else
         echo "Slave is not alive"
     fi
+
+    #Copy the contents of /mnt/altschool directory from the Master node to slave
+    sudo scp /mnt/alstschool vagrant@$SlaveIP:/mnt/altschool
 fi
 
 # Update packages
