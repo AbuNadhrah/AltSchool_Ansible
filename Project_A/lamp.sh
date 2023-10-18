@@ -14,14 +14,26 @@ if [ "$(hostname)" = "master" ]; then
     #Enable SSH key-based authentication:
     #First check if the slave is alive
     SlaveIP="192.168.56.104"
-    if curl -I "$SlaveIP"; then
+    Status_Code=$(curl -I -s -o/dev/null -w "%{http_code}" "$SlaveIP")
 
-        #switch user to altschool
-        sudo su altschool
+    if [ $Status_Code -eq 200 ]; then
+
+        #switch user to altschool - as I've learned, switching to the user (altschool) is counter-productive as this creates a  new session and halts execution of subsequent code in this block
+        #sudo su altschool
 
         #Then let's run the following SSH commands - generate private / public key; copy public key to slave
-        sudo -u ssh-keygen -t rsa -N "" -f /home/altschool/.ssh/id_rsa
-        sudo sshpass -p "vagrant" ssh-copy-id -i /home/altschool/.ssh/id_rsa.pub vagrant@$SlaveIP
+
+        #First, check if we have previously generated private/public key
+        if ! [ -f /home/altschool/.ssh/id_rsa.pub ]; then
+            sudo -u altschool ssh-keygen -t rsa -N "" -f /home/altschool/.ssh/id_rsa
+        fi
+
+        #now check is sshpass is installed
+        if ! type "sshpass" > /dev/null; then
+            sudo apt-get install sshpass
+        fi
+
+        sudo -u altschool sshpass -p "vagrant" ssh-copy-id -i /home/altschool/.ssh/id_rsa.pub vagrant@$SlaveIP
     else
         echo "Slave is not alive"
     fi

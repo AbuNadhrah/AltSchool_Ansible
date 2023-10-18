@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
 
   slave.vm.box = "ubuntu/focal64"
   slave.vm.hostname = "slave"
-  slave.vm.network "private_network", ip:192.168.56.104
+  slave.vm.network "private_network", ip:"192.168.56.104"
   #RUN THE SHELL SCRIPT to set up the LAMP stack
   slave.vm.provision "shell", path: "lamp.sh"
 
